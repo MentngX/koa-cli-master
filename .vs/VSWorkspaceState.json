@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\bin",
+    "\\config",
+    "\\models",
+    "\\mysql",
+    "\\routes",
+    "\\views"
+  ],
+  "SelectedNode": "\\routes\\index.js",
+  "PreviewInSolutionExplorer": false
+}
