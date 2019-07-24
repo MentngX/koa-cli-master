@@ -3,13 +3,25 @@ const app = new Koa()
 const views = require('koa-views')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
-const bodyparser = require('koa-bodyparser')
+const koaBody = require('koa-body')
 const logger = require('koa-logger')
 
 // 模板引擎需要放在所有的方法前面
 app.use(views(__dirname + '/views', {
   extension: 'pug'
 }))
+
+// middlewares
+app.use(koaBody({
+  multipart: true,
+  formLimit: 2*1024*1024,
+  formidable:{
+    maxFieldsSize: 20*1024*1024
+  }
+}))
+app.use(json())
+app.use(logger())
+
 
 // 引入koa-router组建并且生成router实例
 const Router = require('koa-router')
@@ -28,12 +40,9 @@ app.use(router.routes()).use(router.allowedMethods())
 // error handler
 onerror(app)
 
-// middlewares
-app.use(bodyparser({
-  enableTypes:['json', 'form', 'text']
-}))
-app.use(json())
-app.use(logger())
+
+
+
 
 
 // 开启静态资源访问
@@ -49,6 +58,7 @@ app.use(async (ctx, next) => {
   const ms = new Date() - start
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
+
 
 
 // error-handling

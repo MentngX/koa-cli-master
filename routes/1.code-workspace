@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "F:\\database1\\慕课实践\\nodejs慕课"
+		},
+		{
+			"path": "F:\\database1\\koa"
+		},
+		{
+			"path": "F:\\database1\\koa-cli-master"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}

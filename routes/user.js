@@ -7,8 +7,8 @@ const User = require('../models/UserModel')
 // router.prefix('/api/user')
 
 router.post('/register', async (ctx, next) =>{
-  console.log(ctx.request.body)
   const {username, password, role} = ctx.request.body
+
   const createUsers = await User.create({
     username,
     password,
