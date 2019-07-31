@@ -29,9 +29,13 @@ const router = new Router()
 // 引入index路由
 const index = require('./routes/index')
 router.use(index)
-// 引入users路由
+// 引入user路由
 const user = require('./routes/user')
 router.use('/api/user', user)
+// 引入shift路由
+const shift = require('./routes/shift')
+router.use('/api/shift', shift)
+
 // 将router实例挂载在app实例上
 app.use(router.routes()).use(router.allowedMethods())
 
