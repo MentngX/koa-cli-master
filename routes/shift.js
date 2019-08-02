@@ -2,8 +2,7 @@ const router = require('koa-router')()
 
 // 引入UserModel实例
 const Shift = require('../models/ShiftModel')
-// 引入sequelize
-const sequelize = require('../mysql/sequelize')
+const Doctor = require('../models/DoctorModel')
 
 // router.prefix('/api/shift')
 
@@ -27,6 +26,10 @@ router.get('/query', async ctx =>{
     const res = await Shift.findAll({
         where:{
             name
+        },
+        include:{
+            model: Doctor,
+            as: 'doctorInfo'
         },
         // 根据时间降序查找，最新记录在最上面
         order: [
@@ -52,7 +55,6 @@ router.get('/query', async ctx =>{
  */
 
 router.post('/update', async (ctx,next) =>{
-    // const updateShift = await sequelize.transaction(async t =>{
         // 轮班 id
         const id = ctx.request.body.id
         // 查找信息

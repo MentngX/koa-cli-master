@@ -23,19 +23,15 @@ DROP TABLE IF EXISTS `appointment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `appointment` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '挂号编号',
-  `u_id` int(10) DEFAULT NULL COMMENT '病人id',
+  `id` int(10) unsigned zerofill NOT NULL COMMENT '挂号编号',
+  `u_id` int(10) DEFAULT NULL COMMENT '病人身份证号',
   `d_id` int(10) DEFAULT NULL COMMENT '医生id',
-  `u_name` varchar(10) DEFAULT NULL,
+  `u_name` varchar(10) DEFAULT NULL COMMENT '患者姓名',
   `time` time DEFAULT NULL COMMENT '时间',
   `linenumber` int(10) DEFAULT NULL COMMENT '排队序号',
-  `department` varchar(255) DEFAULT NULL,
+  `department` varchar(255) DEFAULT NULL COMMENT '科室',
   `expenses` decimal(10,2) DEFAULT NULL COMMENT '挂号诊疗费',
-  PRIMARY KEY (`id`),
-  KEY `u_id_idx` (`u_id`),
-  KEY `doctor_idx` (`d_id`),
-  CONSTRAINT `doctor` FOREIGN KEY (`d_id`) REFERENCES `doctor` (`d_id`),
-  CONSTRAINT `patient` FOREIGN KEY (`u_id`) REFERENCES `patient` (`u_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='挂号单';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -112,13 +108,15 @@ DROP TABLE IF EXISTS `doctor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `doctor` (
-  `d_id` int(10) NOT NULL COMMENT '主键',
-  `d_name` varchar(10) DEFAULT NULL COMMENT '医生姓名',
-  `d_sex` varchar(2) DEFAULT NULL COMMENT '医生性别',
-  `department` varchar(255) DEFAULT NULL COMMENT '部门',
-  `d_age` varchar(45) DEFAULT NULL COMMENT '年龄',
-  PRIMARY KEY (`d_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='医生';
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(10) DEFAULT NULL COMMENT '医生姓名',
+  `sex` varchar(2) DEFAULT NULL COMMENT '医生性别',
+  `date` date DEFAULT NULL COMMENT '入职日期',
+  `education` varchar(45) DEFAULT NULL COMMENT '学历',
+  `major` varchar(45) DEFAULT NULL COMMENT '专业',
+  `department` varchar(255) DEFAULT NULL COMMENT '科室',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='医生';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,6 +125,7 @@ CREATE TABLE `doctor` (
 
 LOCK TABLES `doctor` WRITE;
 /*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
+INSERT INTO `doctor` VALUES (1,'吴红','女',NULL,NULL,NULL,NULL),(2,'孙苗苗','女',NULL,NULL,NULL,NULL),(3,'张大大','女',NULL,NULL,NULL,NULL),(4,'杨米','女',NULL,NULL,NULL,NULL),(5,'杨阳','男',NULL,NULL,NULL,NULL),(6,'王二博','男',NULL,NULL,NULL,NULL),(7,'王大雅','女',NULL,NULL,NULL,NULL),(8,'王天霸','男',NULL,NULL,NULL,NULL),(9,'王岩','男',NULL,NULL,NULL,NULL),(10,'肖沾','男',NULL,NULL,NULL,NULL),(11,'陈肖','男',NULL,NULL,NULL,NULL),(12,'黄中','男',NULL,NULL,NULL,NULL),(13,'黄豆','女',NULL,NULL,NULL,NULL),(17,'黄一',NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,13 +215,20 @@ DROP TABLE IF EXISTS `patient`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `patient` (
-  `u_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `u_name` varchar(10) DEFAULT NULL COMMENT '病人姓名',
-  `u_sex` varchar(2) DEFAULT NULL COMMENT '病人性别',
-  `u_username` varchar(10) DEFAULT NULL COMMENT '病人用户名',
-  `u_phone` varchar(11) DEFAULT NULL COMMENT '病人电话',
-  `u_age` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`u_id`)
+  `id` varchar(18) NOT NULL COMMENT '主键,身份证号',
+  `date` date DEFAULT NULL COMMENT '建档日期',
+  `name` varchar(10) DEFAULT NULL COMMENT '病人姓名',
+  `age` varchar(10) DEFAULT NULL COMMENT '患者年龄',
+  `phone` varchar(11) DEFAULT NULL COMMENT '联系方式',
+  `sex` varchar(255) DEFAULT NULL COMMENT '性别',
+  `address` varchar(255) DEFAULT NULL COMMENT '家庭地址',
+  `l_name` varchar(45) DEFAULT NULL COMMENT '联系人姓名',
+  `l_phone` varchar(45) DEFAULT NULL COMMENT '联系人号码',
+  `disease` varchar(45) DEFAULT NULL COMMENT '病症',
+  `history` varchar(45) DEFAULT NULL COMMENT '病史',
+  `department` varchar(45) DEFAULT NULL COMMENT '科室',
+  `doctor` varchar(45) DEFAULT NULL COMMENT '主治医生名字',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='病人';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -232,6 +238,7 @@ CREATE TABLE `patient` (
 
 LOCK TABLES `patient` WRITE;
 /*!40000 ALTER TABLE `patient` DISABLE KEYS */;
+INSERT INTO `patient` VALUES ('440882199508132346',NULL,'王网',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'李翔');
 /*!40000 ALTER TABLE `patient` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -298,6 +305,7 @@ DROP TABLE IF EXISTS `shift`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `shift` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `d_id` int(10) DEFAULT NULL,
   `date` date NOT NULL COMMENT '轮班日期',
   `time` varchar(45) DEFAULT NULL COMMENT '轮班时段',
   `name` varchar(45) DEFAULT NULL,
@@ -306,8 +314,11 @@ CREATE TABLE `shift` (
   `phone` varchar(45) DEFAULT NULL,
   `text` varchar(45) DEFAULT NULL COMMENT '出勤情况',
   `sign` varchar(45) DEFAULT NULL COMMENT '主任签名',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='轮班信息';
+  `doctorId` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `医生id_idx` (`d_id`),
+  CONSTRAINT `医生id` FOREIGN KEY (`d_id`) REFERENCES `doctor` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='轮班信息';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -316,7 +327,7 @@ CREATE TABLE `shift` (
 
 LOCK TABLES `shift` WRITE;
 /*!40000 ALTER TABLE `shift` DISABLE KEYS */;
-INSERT INTO `shift` VALUES (1,'2019-06-23','大夜：00：00~8：00','黄中','男','13437884546','外科','迟到','黄上'),(2,'2019-06-20','早班：6:00~17:00','王二博','男','13437884564','骨科','工作时间','黄下'),(3,'2019-03-11','日班：10：00~21：00','肖沾','男','13437884566','精神科','早退','黄敏'),(4,'2018-04-02','小夜：16：00~00：00','孙苗苗','女','13437884524','急诊','病假','杨图'),(5,'2019-08-01','小夜：16：00~00：00','王大雅','女','13412384561','妇科','工作时间','黄敏'),(6,'2019-01-01','日班：10：00~21：00','王天霸','男','13432284566','口腔科','加班','杨图'),(7,'2019-02-03','日班：10：00~21：00','张大大','女','13431335241','护士室','工作时间','黄敏'),(8,'2019-03-02','日班：10：00~21：00','杨米','女','13437843643','胸心外科','工作时间','黄敏'),(9,'2018-11-09','早班：6:00~17:00','杨阳','男','13432143256','急诊','工作时间','黄敏'),(10,'2018-06-05','早班：6:00~17:00','吴红','女','13434325236','骨科','工作时间','杨图'),(11,'2018-04-06','早班：6:00~17:00','陈肖','男','13442354536','精神科','工作时间','黄敏'),(12,'2018-06-30','早班：6:00~17:00','王岩','男','13467884566','外科','工作时间','黄敏'),(13,'2019-07-07','早班：6:00~17:00','黄豆','女','13778332566','妇科','工作时间','杨图');
+INSERT INTO `shift` VALUES (1,12,'2019-06-22','大夜：00：00~8：00','黄中','男','13437884546','外科','迟到','黄上',NULL),(2,6,'2019-06-20','早班：6:00~17:00','王二博','男','13437884564','骨科','工作时间','黄下',NULL),(3,10,'2019-03-11','日班：10：00~21：00','肖沾','男','13437884566','精神科','早退','黄敏',NULL),(4,2,'2018-04-02','小夜：16：00~00：00','孙苗苗','女','13437884524','急诊','病假','杨图',NULL),(5,7,'2019-08-01','小夜：16：00~00：00','王大雅','女','13412384561','妇科','工作时间','黄敏',NULL),(6,8,'2019-01-01','日班：10：00~21：00','王天霸','男','13432284566','口腔科','加班','杨图',NULL),(7,3,'2019-02-03','日班：10：00~21：00','张大大','女','13431335241','护士室','工作时间','黄敏',NULL),(8,4,'2019-03-02','日班：10：00~21：00','杨米','女','13437843643','胸心外科','工作时间','黄敏',NULL),(9,5,'2018-11-09','早班：6:00~17:00','杨阳','男','13432143256','急诊','工作时间','黄敏',NULL),(10,1,'2018-06-05','早班：6:00~17:00','吴红','女','13434325236','骨科','工作时间','杨图',NULL),(11,11,'2018-04-06','早班：6:00~17:00','陈肖','男','13442354536','精神科','工作时间','黄敏',NULL),(12,9,'2018-06-30','早班：6:00~17:00','王岩','男','13467884566','外科','工作时间','黄敏',NULL),(13,13,'2019-07-07','早班：6:00~17:00','黄豆','女','13778332566','妇科','工作时间','杨图',NULL),(14,13,'2019-07-06','早班：6:00~17:00','黄豆','女','13778332566','妇科','工作时间','杨图',NULL);
 /*!40000 ALTER TABLE `shift` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -363,4 +374,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-08-01  1:27:19
+-- Dump completed on 2019-08-03  0:18:36

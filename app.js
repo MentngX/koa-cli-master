@@ -35,6 +35,12 @@ router.use('/api/user', user)
 // 引入shift路由
 const shift = require('./routes/shift')
 router.use('/api/shift', shift)
+// 引入doctor路由
+const doctor = require('./routes/doctor')
+router.use('/api/doctor', doctor)
+// 引入patient路由
+const patient = require('./routes/patient')
+router.use('/api/patient', patient)
 
 // 将router实例挂载在app实例上
 app.use(router.routes()).use(router.allowedMethods())
