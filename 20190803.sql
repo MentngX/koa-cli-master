@@ -23,15 +23,19 @@ DROP TABLE IF EXISTS `appointment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `appointment` (
-  `id` int(10) unsigned zerofill NOT NULL COMMENT '挂号编号',
-  `u_id` int(10) DEFAULT NULL COMMENT '病人身份证号',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '挂号编号',
+  `u_id` varchar(19) DEFAULT NULL COMMENT '病人身份证号',
   `d_id` int(10) DEFAULT NULL COMMENT '医生id',
   `u_name` varchar(10) DEFAULT NULL COMMENT '患者姓名',
   `time` time DEFAULT NULL COMMENT '时间',
-  `linenumber` int(10) DEFAULT NULL COMMENT '排队序号',
+  `line` int(10) DEFAULT NULL COMMENT '排队序号',
   `department` varchar(255) DEFAULT NULL COMMENT '科室',
   `expenses` decimal(10,2) DEFAULT NULL COMMENT '挂号诊疗费',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `挂号医生id_idx` (`d_id`) /*!80000 INVISIBLE */,
+  KEY `挂号病人id_idx` (`u_id`),
+  CONSTRAINT `挂号医生id` FOREIGN KEY (`d_id`) REFERENCES `doctor` (`id`),
+  CONSTRAINT `挂号病人id` FOREIGN KEY (`u_id`) REFERENCES `patient` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='挂号单';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -114,6 +118,7 @@ CREATE TABLE `doctor` (
   `date` date DEFAULT NULL COMMENT '入职日期',
   `education` varchar(45) DEFAULT NULL COMMENT '学历',
   `major` varchar(45) DEFAULT NULL COMMENT '专业',
+  `position` varchar(45) DEFAULT NULL,
   `department` varchar(255) DEFAULT NULL COMMENT '科室',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='医生';
@@ -125,7 +130,7 @@ CREATE TABLE `doctor` (
 
 LOCK TABLES `doctor` WRITE;
 /*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
-INSERT INTO `doctor` VALUES (1,'吴红','女',NULL,NULL,NULL,NULL),(2,'孙苗苗','女',NULL,NULL,NULL,NULL),(3,'张大大','女',NULL,NULL,NULL,NULL),(4,'杨米','女',NULL,NULL,NULL,NULL),(5,'杨阳','男',NULL,NULL,NULL,NULL),(6,'王二博','男',NULL,NULL,NULL,NULL),(7,'王大雅','女',NULL,NULL,NULL,NULL),(8,'王天霸','男',NULL,NULL,NULL,NULL),(9,'王岩','男',NULL,NULL,NULL,NULL),(10,'肖沾','男',NULL,NULL,NULL,NULL),(11,'陈肖','男',NULL,NULL,NULL,NULL),(12,'黄中','男',NULL,NULL,NULL,NULL),(13,'黄豆','女',NULL,NULL,NULL,NULL),(17,'黄一',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `doctor` VALUES (1,'吴红','女',NULL,NULL,NULL,NULL,NULL),(2,'孙苗苗','女',NULL,NULL,NULL,NULL,NULL),(3,'张大大','女',NULL,NULL,NULL,NULL,NULL),(4,'杨米','女',NULL,NULL,NULL,NULL,NULL),(5,'杨阳','男',NULL,NULL,NULL,NULL,NULL),(6,'王二博','男',NULL,NULL,NULL,NULL,NULL),(7,'王大雅','女',NULL,NULL,NULL,NULL,NULL),(8,'王天霸','男',NULL,NULL,NULL,NULL,NULL),(9,'王岩','男',NULL,NULL,NULL,NULL,NULL),(10,'肖沾','男',NULL,NULL,NULL,NULL,NULL),(11,'陈肖','男',NULL,NULL,NULL,NULL,NULL),(12,'黄中','男',NULL,NULL,NULL,NULL,NULL),(13,'黄豆','女',NULL,NULL,NULL,NULL,NULL),(17,'黄一',NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -374,4 +379,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-08-03  0:18:36
+-- Dump completed on 2019-08-03 21:23:32

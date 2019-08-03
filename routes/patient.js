@@ -99,9 +99,7 @@ router.get('/query', async ctx =>{
                 }
             }
 
-            ]
-            
-    
+            ] 
         }
     })
     

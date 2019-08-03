@@ -29,4 +29,5 @@ const Shift = sequelize.define('shift',{
 // 构建和 Doctor 表的关联关系 （一个医生可拥有多个轮班信息）
 Shift.belongsTo(Doctor, { foreignKey:'d_id', as: 'doctorInfo'})
 
+
 module.exports = Shift

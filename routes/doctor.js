@@ -1,3 +1,8 @@
+/**
+ * 医生 
+ * */
+
+
 const router = require('koa-router')()
 
 // 引入UserModel实例
@@ -25,7 +30,7 @@ router.get('/list', async ctx => {
  * /api/doctor/add
  */
 router.post('/add', async (ctx, next) => {
-    const {name, sex, date, education, major, department} = ctx.request.body
+    const {name, sex, date, education, major, position, department} = ctx.request.body
 
     const newDoctorList1 = await Doctor.create({
         name,
@@ -33,6 +38,7 @@ router.post('/add', async (ctx, next) => {
         date,
         education,
         major,
+        position,
         department,
     })
     if(newDoctorList1){

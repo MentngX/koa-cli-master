@@ -1,33 +1,33 @@
 /**
- * 轮班信息
- */
+ * 挂号信息 */
 
 
 const router = require('koa-router')()
 
-const Shift = require('../models/ShiftModel')
+const Reg = require('../models/AppointmentModel')
 const Doctor = require('../models/DoctorModel')
+const Patient = require('../models/PatientModel')
 
-// router.prefix('/api/shift')
+// router.prefix('/api/reg')
 
-/**获得所有轮班信息
- *  /api/shift/list
+/**获得所有挂号信息
+ *  /api/reg/list
  */
 router.get('/list', async ctx => {
-    const shifts = await Shift.findAll()
+    const regs = await Reg.findAll()
     ctx.status = 200
     ctx.body = {
-      shifts
+      regs
     }
   })
 
-  /**根据医生姓名搜索轮班信息
-   * /api/shift/query
+  /**根据医生姓名搜索挂号信息
+   * /api/reg/query
    * 传参数 doctorName 过去，得到信息
    */
 router.get('/query', async ctx =>{
     const name = ctx.query.doctorName
-    const res = await Shift.findAll({
+    const res = await Reg.findAll({
         where:{
             name
         },
@@ -45,8 +45,8 @@ router.get('/query', async ctx =>{
         ctx.status = 200
         ctx.body = {
             success: true,
-            msg: 'get shift success',
-            shift: res
+            msg: 'get reg success',
+            reg: res
         }
         return
     }
@@ -54,15 +54,15 @@ router.get('/query', async ctx =>{
 })
 
 
-/**修改轮班信息
- * /api/shift/update
+/**修改挂号信息
+ * /api/reg/update
  */
 
 router.post('/update', async (ctx,next) =>{
         // 轮班 id
         const id = ctx.request.body.id
         // 查找信息
-        const data = await Shift.findOne({
+        const data = await reg.findOne({
             where: {
                 id
             }
@@ -76,7 +76,7 @@ router.post('/update', async (ctx,next) =>{
         if(res){ctx.status = 200
         ctx.body = {
             success: true,
-            msg: 'update shift success'
+            msg: 'update reg success'
         }
         return
 
@@ -85,12 +85,12 @@ router.post('/update', async (ctx,next) =>{
         }
     })
 
-/** 删除轮班信息
- *  @router POST /api/shift/del
+/** 删除挂号信息
+ *  @router POST /api/reg/del
  */
 
 router.post('/del', async ctx =>{
-    const res = await Shift.destroy({
+    const res = await reg.destroy({
         where:{
             id: ctx.request.body.id
         }
@@ -100,7 +100,7 @@ router.post('/del', async ctx =>{
         ctx.status = 200
         ctx.body = {
             success: true,
-            msg: 'delete shift success'
+            msg: 'delete reg success'
         }
         return
     }
