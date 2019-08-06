@@ -8,7 +8,7 @@ const Doctor = sequelize.define('doctor',{
             primaryKey: true
         },
         name: Sequelize.STRING(10),
-        sex: Sequelize.STRING(2),
+        sex: Sequelize.STRING(45),
         date: Sequelize.DATE,
         education: Sequelize.STRING(45),
         major: Sequelize.STRING(45),

@@ -5,8 +5,10 @@
 
 const router = require('koa-router')()
 
-// 引入UserModel实例
+// 引入Doctor实例
 const Doctor = require('../models/DoctorModel')
+// 引入Shift实例
+const Shift = require('../models/ShiftModel')
 
 // router.prefix('/api/doctor')
 
@@ -80,7 +82,8 @@ router.post('/update', async (ctx,next) =>{
         if(res){ctx.status = 200
         ctx.body = {
             success: true,
-            msg: 'update doctor success'
+            msg: 'update doctor success',
+            res
         }
         return
 
@@ -96,13 +99,19 @@ router.post('/update', async (ctx,next) =>{
  * /api/doctor/del
  */
 router.post('/del', async (ctx, next) => {
+    const d_id = ctx.request.body.id
+    const destroyShift = await Shift.destroy({
+        where: {
+            d_id : d_id
+        }
+    })
     const newDoctorList2 = await Doctor.destroy({
 
         where: {
             id: ctx.request.body.id
         }
     })
-    if(newDoctorList2){
+    if(newDoctorList2,destroyShift){
         ctx.body = {
             success: true,
             msg: '保存成功'

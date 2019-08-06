@@ -91,7 +91,14 @@ router.post('/add', async (ctx, next) => {
  *  /api/reg/list
  */
 router.get('/list', async ctx => {
-    const regs = await Reg.findAll()
+    const regs = await Reg.findAll({
+        attributes:['id','time','p_id'],
+        include:{
+            model: Patient,
+            as: 'patientInfo',
+            attributes:['name','age','sex','address','phone','disease','department','doctor']
+        },
+    })
     ctx.status = 200
     ctx.body = {
       regs
@@ -191,7 +198,7 @@ router.get('/dataquery', async ctx =>{
         include:{
             model: Patient,
             as: 'patientInfo',
-            attributes:['name','age','phone','disease','department']
+            attributes:['name','age','address','phone','disease']
         },
     })
     
