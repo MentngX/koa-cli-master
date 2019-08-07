@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `appointment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `appointment` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '挂号编号',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '挂号编号',
   `p_id` varchar(19) DEFAULT NULL COMMENT '病人身份证号',
   `d_id` int(10) DEFAULT NULL COMMENT '医生id',
   `p_name` varchar(10) DEFAULT NULL COMMENT '患者姓名',
@@ -37,7 +37,7 @@ CREATE TABLE `appointment` (
   KEY `挂号病人id_idx` (`p_id`),
   CONSTRAINT `挂号医生id` FOREIGN KEY (`d_id`) REFERENCES `doctor` (`id`),
   CONSTRAINT `挂号病人id` FOREIGN KEY (`p_id`) REFERENCES `patient` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='挂号单';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='挂号单';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,14 +116,14 @@ DROP TABLE IF EXISTS `doctor`;
 CREATE TABLE `doctor` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(10) DEFAULT NULL COMMENT '医生姓名',
-  `sex` varchar(2) DEFAULT NULL COMMENT '医生性别',
+  `sex` varchar(45) DEFAULT NULL COMMENT '医生性别',
   `date` date DEFAULT NULL COMMENT '入职日期',
   `education` varchar(45) DEFAULT NULL COMMENT '学历',
   `major` varchar(45) DEFAULT NULL COMMENT '专业',
   `position` varchar(45) DEFAULT NULL,
   `department` varchar(255) DEFAULT NULL COMMENT '科室',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='医生';
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COMMENT='医生';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,7 +132,7 @@ CREATE TABLE `doctor` (
 
 LOCK TABLES `doctor` WRITE;
 /*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
-INSERT INTO `doctor` VALUES (1,'吴红','女',NULL,NULL,NULL,NULL,NULL),(2,'孙苗苗','女',NULL,NULL,NULL,NULL,NULL),(3,'张大大','女',NULL,NULL,NULL,NULL,NULL),(4,'杨米','女',NULL,NULL,NULL,NULL,NULL),(5,'杨阳','男',NULL,NULL,NULL,NULL,NULL),(6,'王二博','男',NULL,NULL,NULL,NULL,NULL),(7,'王大雅','女',NULL,NULL,NULL,NULL,NULL),(8,'王天霸','男',NULL,NULL,NULL,NULL,NULL),(9,'王岩','男',NULL,NULL,NULL,NULL,NULL),(10,'肖沾','男',NULL,NULL,NULL,NULL,NULL),(11,'陈肖','男',NULL,NULL,NULL,NULL,NULL),(12,'黄中','男',NULL,NULL,NULL,'主治医师','外科'),(13,'黄豆','女',NULL,NULL,NULL,NULL,NULL),(17,'黄一',NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `doctor` VALUES (2,'孙苗苗','女',NULL,NULL,NULL,NULL,NULL),(3,'张大大','女',NULL,NULL,NULL,NULL,NULL),(4,'杨米','女',NULL,NULL,NULL,NULL,NULL),(5,'杨阳','男',NULL,NULL,NULL,NULL,NULL),(6,'王二博','男',NULL,NULL,NULL,NULL,NULL),(7,'王大雅','女',NULL,NULL,NULL,NULL,NULL),(8,'王天霸','男',NULL,NULL,NULL,NULL,NULL),(9,'王岩','男',NULL,NULL,NULL,NULL,NULL),(10,'肖沾','男',NULL,NULL,NULL,NULL,NULL),(11,'陈肖','男',NULL,NULL,NULL,NULL,NULL),(12,'黄中','男',NULL,NULL,NULL,'主治医师','外科'),(13,'黄豆','女',NULL,NULL,NULL,NULL,NULL),(17,'黄一',NULL,NULL,NULL,NULL,NULL,NULL),(18,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(19,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(20,'王大傻','man',NULL,NULL,'口腔科','主治医师','口腔科'),(21,'王大傻','男',NULL,NULL,'口腔科','主治医师','口腔科'),(22,'王二傻','男','2018-09-01','undergraduate','口腔科','主治医师','口腔科'),(23,'王二傻','男',NULL,'undergraduate','口腔科','主治医师','口腔科'),(24,'王二傻','男',NULL,'undergraduate','口腔科','主治医师','口腔科'),(25,'王三傻','男',NULL,'junior','口腔科','主治医师','口腔科'),(26,'王大傻','女',NULL,'undergraduate','123','123','132'),(27,'王二傻','女',NULL,'undergraduate','11','11','111'),(30,'王大鸭','女',NULL,'undergraduate','111','111','111'),(31,'王大鸭','女',NULL,'undergraduate','111','111','111'),(32,'旺达啊啊','女',NULL,'undergraduate','11','11','11'),(33,'王二帅','男',NULL,'postgraduate','22','22','22'),(34,'王二帅','男',NULL,'postgraduate','22','22','22'),(35,'12344','女',NULL,'undergraduate','11','11','11'),(36,'11111','女',NULL,'undergraduate','11','11','11'),(37,'11111','女',NULL,'undergraduate','11','11','11'),(38,'1111','女','2019-08-05','undergraduate','11','111','111');
 /*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -258,11 +258,16 @@ DROP TABLE IF EXISTS `pay`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `pay` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '收费单号',
-  `type` varchar(45) DEFAULT NULL COMMENT '收费项目\n',
+  `type` varchar(45) DEFAULT NULL COMMENT '收费项目类型\\n',
   `date` date DEFAULT NULL COMMENT '日期',
   `price` decimal(10,2) DEFAULT NULL COMMENT '金额',
   `form` varchar(45) DEFAULT NULL COMMENT '收费方式',
-  PRIMARY KEY (`id`)
+  `appointId` int(11) DEFAULT NULL COMMENT '挂号id',
+  `p_id` varchar(18) DEFAULT NULL COMMENT '病人id',
+  `number` int(11) DEFAULT NULL COMMENT '相应序号',
+  PRIMARY KEY (`id`),
+  KEY `病人id_idx` (`p_id`),
+  CONSTRAINT `病人id` FOREIGN KEY (`p_id`) REFERENCES `patient` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收费单';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -334,8 +339,44 @@ CREATE TABLE `shift` (
 
 LOCK TABLES `shift` WRITE;
 /*!40000 ALTER TABLE `shift` DISABLE KEYS */;
-INSERT INTO `shift` VALUES (1,12,'2019-06-22','大夜：00：00~8：00','黄中','男','13437884546','外科','迟到','黄上',NULL),(2,6,'2019-06-20','早班：6:00~17:00','王二博','男','13437884564','骨科','工作时间','黄下',NULL),(3,10,'2019-03-11','日班：10：00~21：00','肖沾','男','13437884566','精神科','早退','黄敏',NULL),(4,2,'2018-04-02','小夜：16：00~00：00','孙苗苗','女','13437884524','急诊','病假','杨图',NULL),(5,7,'2019-08-01','小夜：16：00~00：00','王大雅','女','13412384561','妇科','工作时间','黄敏',NULL),(6,8,'2019-01-01','日班：10：00~21：00','王天霸','男','13432284566','口腔科','加班','杨图',NULL),(7,3,'2019-02-03','日班：10：00~21：00','张大大','女','13431335241','护士室','工作时间','黄敏',NULL),(8,4,'2019-03-02','日班：10：00~21：00','杨米','女','13437843643','胸心外科','工作时间','黄敏',NULL),(9,5,'2018-11-09','早班：6:00~17:00','杨阳','男','13432143256','急诊','工作时间','黄敏',NULL),(10,1,'2018-06-05','早班：6:00~17:00','吴红','女','13434325236','骨科','工作时间','杨图',NULL),(11,11,'2018-04-06','早班：6:00~17:00','陈肖','男','13442354536','精神科','工作时间','黄敏',NULL),(12,9,'2018-06-30','早班：6:00~17:00','王岩','男','13467884566','外科','工作时间','黄敏',NULL),(13,13,'2019-07-07','早班：6:00~17:00','黄豆','女','13778332566','妇科','工作时间','杨图',NULL),(14,13,'2019-07-06','早班：6:00~17:00','黄豆','女','13778332566','妇科','工作时间','杨图',NULL);
+INSERT INTO `shift` VALUES (1,12,'2019-06-22','大夜：00：00~8：00','黄中','男','13437884546','外科','迟到','黄上',NULL),(2,6,'2019-06-20','早班：6:00~17:00','王二博','男','13437884564','骨科','工作时间','黄下',NULL),(3,10,'2019-03-11','日班：10：00~21：00','肖沾','男','13437884566','精神科','早退','黄敏',NULL),(4,2,'2018-04-02','小夜：16：00~00：00','孙苗苗','女','13437884524','急诊','病假','杨图',NULL),(5,7,'2019-08-01','小夜：16：00~00：00','王大雅','女','13412384561','妇科','工作时间','黄敏',NULL),(6,8,'2019-01-01','日班：10：00~21：00','王天霸','男','13432284566','口腔科','加班','杨图',NULL),(7,3,'2019-02-03','日班：10：00~21：00','张大大','女','13431335241','护士室','工作时间','黄敏',NULL),(8,4,'2019-03-02','日班：10：00~21：00','杨米','女','13437843643','胸心外科','工作时间','黄敏',NULL),(9,5,'2018-11-09','早班：6:00~17:00','杨阳','男','13432143256','急诊','工作时间','黄敏',NULL),(11,11,'2018-04-06','早班：6:00~17:00','陈肖','男','13442354536','精神科','工作时间','黄敏',NULL),(12,9,'2018-06-30','早班：6:00~17:00','王岩','男','13467884566','外科','工作时间','黄敏',NULL),(13,13,'2019-07-07','早班：6:00~17:00','黄豆','女','13778332566','妇科','工作时间','杨图',NULL),(14,13,'2019-07-06','早班：6:00~17:00','黄豆','女','13778332566','妇科','工作时间','杨图',NULL);
 /*!40000 ALTER TABLE `shift` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `storage`
+--
+
+DROP TABLE IF EXISTS `storage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `storage` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL COMMENT '药品名称',
+  `manufacturers` varchar(45) DEFAULT NULL COMMENT '厂家',
+  `amount` int(11) DEFAULT NULL COMMENT '数目',
+  `handlers` varchar(45) DEFAULT NULL COMMENT '经手人',
+  `temperature` varchar(45) DEFAULT NULL COMMENT '储存温度',
+  `qualityOfficer` varchar(45) DEFAULT NULL COMMENT '质管员',
+  `warehouseman` varchar(45) DEFAULT NULL COMMENT '仓库员',
+  `pattern` varchar(45) DEFAULT NULL COMMENT '模式',
+  `species` varchar(45) DEFAULT NULL COMMENT '种类',
+  `productionDate` date DEFAULT NULL COMMENT '生产日期',
+  `dosageForm` varchar(45) DEFAULT NULL COMMENT '片剂',
+  `unitPrice` decimal(10,2) DEFAULT NULL,
+  `inDate` date DEFAULT NULL COMMENT '进药时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='药库';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `storage`
+--
+
+LOCK TABLES `storage` WRITE;
+/*!40000 ALTER TABLE `storage` DISABLE KEYS */;
+INSERT INTO `storage` VALUES (1,' 头孢克肟片',' 白云山制药总厂',200,' 黄处',' 01',' 林安徽',' 梁尚',' 01',' 处方','2017-06-28',' 片剂',41.00,'2017-07-28');
+/*!40000 ALTER TABLE `storage` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -360,7 +401,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'xiaowenti','123','患者'),(2,'zhangsan','123','患者'),(3,'lisi','123','患者'),(4,NULL,'123','医生'),(5,'Jack','123','医生');
+INSERT INTO `user` VALUES (1,'xiaowenti','123','患者'),(2,'zhangsan','123','02'),(3,'lisi','123','01'),(4,NULL,'123','医生'),(5,'Jack','123','医生');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -381,4 +422,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-08-04  0:40:14
+-- Dump completed on 2019-08-07 21:57:02
