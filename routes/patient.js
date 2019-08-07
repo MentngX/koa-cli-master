@@ -108,7 +108,7 @@ router.get('/query', async ctx =>{
         ctx.body = {
             success: true,
             msg: 'get patient success',
-            Doctor: res
+            patients: res
         }
         return
     }

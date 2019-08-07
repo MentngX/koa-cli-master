@@ -44,6 +44,12 @@ router.use('/api/patient', patient)
 // 引入reg路由
 const reg = require('./routes/reg')
 router.use('/api/reg', reg)
+// 引入pay路由
+const pay = require('./routes/pay')
+router.use('/api/pay', pay)
+// 引入storage路由
+const storage = require('./routes/storage')
+router.use('/api/storage', storage)
 
 // 将router实例挂载在app实例上
 app.use(router.routes()).use(router.allowedMethods())

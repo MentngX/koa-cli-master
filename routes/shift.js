@@ -46,11 +46,18 @@ router.get('/query', async ctx =>{
         ctx.body = {
             success: true,
             msg: 'get shift success',
-            shift: res
+            shifts: res
         }
         return
     }
-    ctx.status = 400
+    else
+    {
+        ctx.body = {
+            success: false,
+            msg: 'get shift failed'
+        }
+        ctx.status = 400
+    }
 })
 
 
@@ -81,6 +88,10 @@ router.post('/update', async (ctx,next) =>{
         return
 
         } else{
+            ctx.body = {
+                success: false,
+                msg: 'update shift failed'
+            }
             ctx.status = 400
         }
     })

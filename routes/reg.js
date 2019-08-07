@@ -20,7 +20,6 @@ const Sequelize = require('sequelize')
  * 新增挂号办理
  * /api/reg/add
  */
-
 router.post('/add', async (ctx, next) => {
     const { p_name, d_name,  department,time } = ctx.request.body
 
@@ -217,8 +216,20 @@ router.get('/dataquery', async ctx =>{
 
 router.get('/', function (ctx, next) {
     ctx.body = 'this is a users response!'
-  })
+})
 
+/**获取科室信息
+ * /api/reg/department
+ */
+router.get('/department', async ctx => {
+    const departmentList = await Doctor.findAll({
+        attributes: [[Sequelize.literal('DISTINCT `department`'),'department']]
+    })
+    ctx.status = 200
+    ctx.body = {
+        departmentList
+    }
+})
 
 
 
