@@ -13,7 +13,7 @@ const Pay = sequelize.define('pay',{
         form: Sequelize.STRING(45),
         appointId: Sequelize.INTEGER(11),
         p_id: Sequelize.STRING(18),
-        number: Sequelize.INTEGER(11)
+        // number: Sequelize.INTEGER(11)
     },{
         // 不要擅自添加时间戳属性
         timestamps: false,

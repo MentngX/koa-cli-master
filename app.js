@@ -50,6 +50,11 @@ router.use('/api/pay', pay)
 // 引入storage路由
 const storage = require('./routes/storage')
 router.use('/api/storage', storage)
+const drug = require('./routes/drug')
+router.use('/api/drug', drug)
+// 引入prescription路由
+const pre=require('./routes/pre')
+router.use('/api/pre', pre)
 
 // 将router实例挂载在app实例上
 app.use(router.routes()).use(router.allowedMethods())

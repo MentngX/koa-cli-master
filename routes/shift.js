@@ -17,14 +17,48 @@ router.get('/list', async ctx => {
     const shifts = await Shift.findAll()
     ctx.status = 200
     ctx.body = {
-      shifts
+        shifts
     }
-  })
+})
 
-  /**根据医生姓名搜索轮班信息
-   * /api/shift/query
-   * 传参数 doctorName 过去，得到信息
-   */
+/**添加轮班
+ *  /api/shift/add
+ */
+router.post('/add', async (ctx, next) => {
+    const { name, date, department, time, sex, phone, text, sign } = ctx.request.body
+
+    const doctor = await Doctor.findOne({
+        where:{
+            name: name,
+            department: department
+        },
+    })
+    const d_id = doctor.id
+
+    const newShiftList = await Shift.create({
+        name, date, department, time, sex, phone, text, sign, d_id
+    })
+    if(newShiftList){
+            ctx.body = {
+                success: true,
+                msg: '保存成功',
+                newShiftList
+            }
+            ctx.status = 200;
+        }else {
+        ctx.body = {
+            success: false,
+            msg: '发生错误'
+        }
+        ctx.status = 400
+        console.log('error')
+    }
+    })
+
+/**根据医生姓名搜索轮班信息
+ * /api/shift/query
+ * 传参数 doctorName 过去，得到信息
+ */
 router.get('/query', async ctx =>{
     const name = ctx.query.doctorName
     const res = await Shift.findAll({
@@ -123,10 +157,10 @@ router.post('/del', async ctx =>{
 
 router.get('/', function (ctx, next) {
     ctx.body = 'this is a users response!'
-  })
+})
 
 
 
 
 
-  module.exports = router.routes()
+module.exports = router.routes()

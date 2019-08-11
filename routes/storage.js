@@ -52,6 +52,39 @@ router.get('/list', async ctx => {
     }
 })
 
+/**根据药品名字搜索药品信息
+   * /api/storage/query
+   * 传参数 storageName 过去，得到信息
+   */
+router.get('/query', async ctx =>{
+    const name = ctx.query.storageName
+    const res = await Storage.findAll({
+        where:{
+            name: {
+                [Op.like]: `%${name}%`
+            }
+        }
+    })
+
+    if (res){
+        ctx.status = 200
+        ctx.body = {
+            success: true,
+            msg: 'get storage success',
+            storages: res
+        }
+        return
+    }
+    else
+    {
+        ctx.body = {
+            success: false,
+            msg: 'get storage failed'
+        }
+        ctx.status = 400
+    }
+})
+
 
 
 router.get('/', function (ctx, next) {

@@ -20,14 +20,9 @@ const Sequelize = require('sequelize')
  * 新增挂号办理
  * /api/reg/add
  */
-router.post('/add', async (ctx, next) => {
-    const { p_name, d_name,  department,time } = ctx.request.body
-
-    const patient = await Patient.findOne({
-        where:{
-            name: p_name
-        },
-    })
+router.post('/add', async (ctx, next) => {   
+    
+    const { p_name, p_id, d_name, department, time } = ctx.request.body
 
     const doctor = await Doctor.findOne({
         where:{
@@ -36,7 +31,6 @@ router.post('/add', async (ctx, next) => {
         },
     })
 
-    const p_id = patient.id
     const d_id = doctor.id
     const position = doctor.position
     var expenses = 0.00

@@ -9,7 +9,8 @@ const router = require('koa-router')()
 const Doctor = require('../models/DoctorModel')
 // 引入Shift实例
 const Shift = require('../models/ShiftModel')
-
+// 引入Reg实例
+const Reg = require('../models/AppointmentModel')
 // router.prefix('/api/doctor')
 
 router.get('/', function (ctx, next) {
@@ -100,18 +101,37 @@ router.post('/update', async (ctx,next) =>{
  */
 router.post('/del', async (ctx, next) => {
     const d_id = ctx.request.body.id
-    const destroyShift = await Shift.destroy({
+    const haveShift = await Shift.findAll({
         where: {
             d_id : d_id
         }
     })
+    if(haveShift){
+        Shift.destroy({
+            where: {
+                d_id : d_id
+            }
+        })
+    }
+    const haveReg = await Reg.findAll({
+        where: {
+            d_id : d_id
+        }
+    })
+    if(haveReg){
+        Reg.destroy({
+            where: {
+                d_id : d_id
+            }
+        })
+    }
     const newDoctorList2 = await Doctor.destroy({
 
         where: {
             id: ctx.request.body.id
         }
     })
-    if(newDoctorList2,destroyShift){
+    if(newDoctorList2){
         ctx.body = {
             success: true,
             msg: '保存成功'
